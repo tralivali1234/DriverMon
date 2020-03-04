@@ -227,11 +227,12 @@ NTSTATUS AddDriver(PCWSTR driverName, PVOID* driverObject) {
 	UNICODE_STRING name;
 	RtlInitUnicodeString(&name, driverName);
 	PDRIVER_OBJECT driver;
-	auto status = ObReferenceObjectByName(&name, OBJ_CASE_INSENSITIVE, nullptr, 0, *IoDriverObjectType, KernelMode, nullptr, (PVOID*)&driver);
+	auto status = ObReferenceObjectByName(&name, OBJ_CASE_INSENSITIVE, nullptr, 0, 
+		*IoDriverObjectType, KernelMode, nullptr, (PVOID*)&driver);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	::wcscpy(globals.Drivers[index].DriverName, driverName);
+	::wcscpy_s(globals.Drivers[index].DriverName, driverName);
 
 	for (int i = 0; i <= IRP_MJ_MAXIMUM_FUNCTION; i++) {
 		globals.Drivers[index].MajorFunction[i] = static_cast<PDRIVER_DISPATCH>(
